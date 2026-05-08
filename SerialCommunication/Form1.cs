@@ -249,6 +249,7 @@ namespace SerialCommunication
         {
             timerOefening3.Enabled = tabControl.SelectedIndex == 3;
             timerOefening4.Enabled = tabControl.SelectedIndex == 4;
+            timerOefening5.Enabled = tabControl.SelectedIndex == 5; 
         }
 
         private void timerOefening3_Tick(object sender, EventArgs e)
@@ -313,8 +314,50 @@ namespace SerialCommunication
                 serialPortArduino.Close();
                 radioButtonVerbonden.Checked = false;
                 buttonConnect.Text = "Connect";
+         //Oef 5 : Thermostaat
+
             }
         }
+
+        private void timerOefening5_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!serialPortArduino.IsOpen) return;
+
+                serialPortArduino.ReadExisting();
+
+                // Gewenste temperatuur (potentiometer op A0)
+                serialPortArduino.WriteLine("get a0");
+                string antwoord0 = serialPortArduino.ReadLine().TrimEnd().Substring(4);
+                int adc0 = Int32.Parse(antwoord0);
+
+                double gewensteTemp = 0.039101 * adc0 + 5;   // lineaire herschaling 0..1023 → 5..45°C
+                labelGewensteTemp.Text = $"{gewensteTemp:F1} °C";
+
+                // Huidige temperatuur (LM35 op A1)
+                serialPortArduino.WriteLine("get a1");
+                string antwoord1 = serialPortArduino.ReadLine().TrimEnd().Substring(4);
+                int adc1 = Int32.Parse(antwoord1);
+
+                double huidigeTemp = (adc1 / 1023.0) * 500.0;   // LM35: 0..1023 → 0..500°C
+                labelHuidigeTemp.Text = $"{huidigeTemp:F1} °C";
+
+                // LED aansturen (digitale pin 2)
+                if (huidigeTemp < gewensteTemp)
+                    serialPortArduino.WriteLine("set d2 high");
+                else
+                    serialPortArduino.WriteLine("set d2 low");
+            }
+            catch (Exception ex)
+            {
+                labelStatus.Text = "Error: " + ex.Message;
+                serialPortArduino.Close();
+                radioButtonVerbonden.Checked = false;
+                buttonConnect.Text = "Connect";
+              }
+
+         }
     }
 }
   
