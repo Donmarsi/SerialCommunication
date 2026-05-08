@@ -90,6 +90,8 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.serialPortArduino = new System.IO.Ports.SerialPort(this.components);
+            this.timerOefening3 = new System.Windows.Forms.Timer(this.components);
+            this.timerOefening4 = new System.Windows.Forms.Timer(this.components);
             this.tabControl.SuspendLayout();
             this.tabPageInstellingen.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -175,6 +177,7 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1176, 641);
             this.tabControl.TabIndex = 9;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // tabPageInstellingen
             // 
@@ -559,6 +562,7 @@
             this.checkBoxDigital4.TabIndex = 2;
             this.checkBoxDigital4.Text = "Digital 4";
             this.checkBoxDigital4.UseVisualStyleBackColor = true;
+            this.checkBoxDigital4.CheckedChanged += new System.EventHandler(this.checkBoxDigital4_CheckedChanged);
             // 
             // checkBoxDigital3
             // 
@@ -570,6 +574,7 @@
             this.checkBoxDigital3.TabIndex = 1;
             this.checkBoxDigital3.Text = "Digital 3";
             this.checkBoxDigital3.UseVisualStyleBackColor = true;
+            this.checkBoxDigital3.CheckedChanged += new System.EventHandler(this.checkBoxDigital3_CheckedChanged);
             // 
             // checkBoxDigital2
             // 
@@ -581,6 +586,7 @@
             this.checkBoxDigital2.TabIndex = 0;
             this.checkBoxDigital2.Text = "Digital 2";
             this.checkBoxDigital2.UseVisualStyleBackColor = true;
+            this.checkBoxDigital2.CheckedChanged += new System.EventHandler(this.checkBoxDigital2_CheckedChanged);
             // 
             // tabPageOefening2
             // 
@@ -620,6 +626,7 @@
             this.trackBarPWM11.Size = new System.Drawing.Size(370, 69);
             this.trackBarPWM11.TabIndex = 4;
             this.trackBarPWM11.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarPWM11.Scroll += new System.EventHandler(this.trackBarPWM11_Scroll);
             // 
             // label2
             // 
@@ -641,6 +648,7 @@
             this.trackBarPWM10.Size = new System.Drawing.Size(370, 69);
             this.trackBarPWM10.TabIndex = 2;
             this.trackBarPWM10.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarPWM10.Scroll += new System.EventHandler(this.trackBarPWM10_Scroll);
             // 
             // label1
             // 
@@ -662,6 +670,7 @@
             this.trackBarPWM9.Size = new System.Drawing.Size(370, 69);
             this.trackBarPWM9.TabIndex = 0;
             this.trackBarPWM9.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarPWM9.Scroll += new System.EventHandler(this.trackBarPWM9_Scroll);
             // 
             // pictureBox2
             // 
@@ -867,6 +876,16 @@
             this.serialPortArduino.ReadTimeout = 1000;
             this.serialPortArduino.WriteTimeout = 1000;
             // 
+            // timerOefening3
+            // 
+            this.timerOefening3.Interval = 1000;
+            this.timerOefening3.Tick += new System.EventHandler(this.timerOefening3_Tick);
+            // 
+            // timerOefening4
+            // 
+            this.timerOefening4.Interval = 1000;
+            this.timerOefening4.Tick += new System.EventHandler(this.timerOefening4_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -979,6 +998,8 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel labelStatus;
         private System.IO.Ports.SerialPort serialPortArduino;
+        private System.Windows.Forms.Timer timerOefening3;
+        private System.Windows.Forms.Timer timerOefening4;
     }
 }
 
