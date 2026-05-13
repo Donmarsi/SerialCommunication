@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
@@ -119,6 +120,7 @@ namespace SerialCommunication
 
             }
         }
+
         // Oefening 1: Digitale Uitgangen
         private void checkBoxDigital2_CheckedChanged(object sender, EventArgs e)
         {
@@ -249,7 +251,7 @@ namespace SerialCommunication
         {
             timerOefening3.Enabled = tabControl.SelectedIndex == 3;
             timerOefening4.Enabled = tabControl.SelectedIndex == 4;
-            timerOefening5.Enabled = tabControl.SelectedIndex == 5; 
+            timerOefening5.Enabled = tabControl.SelectedIndex == 5;
         }
 
         private void timerOefening3_Tick(object sender, EventArgs e)
@@ -302,9 +304,9 @@ namespace SerialCommunication
                     string antwoord = serialPortArduino.ReadLine();
                     antwoord = antwoord.TrimEnd();
                     antwoord = antwoord.Substring(4);
-                    
-                    int value =Int32.Parse(antwoord);  
-                    labelAnalog0.Text= value.ToString();
+
+                    int value = Int32.Parse(antwoord);
+                    labelAnalog0.Text = value.ToString();
 
                 }
             }
@@ -314,16 +316,20 @@ namespace SerialCommunication
                 serialPortArduino.Close();
                 radioButtonVerbonden.Checked = false;
                 buttonConnect.Text = "Connect";
-         //Oef 5 : Thermostaat
-
             }
         }
-
         private void timerOefening5_Tick(object sender, EventArgs e)
         {
             try
             {
-                if (!serialPortArduino.IsOpen) return;
+                // Als de poort niet open is → verbinding verbroken
+                if (!serialPortArduino.IsOpen)
+                {
+                    labelStatus.Text = "verbinding verbroken";
+                    radioButtonVerbonden.Checked = false;
+                    buttonConnect.Text = "connect";
+                    return;
+                }
 
                 serialPortArduino.ReadExisting();
 
@@ -332,7 +338,7 @@ namespace SerialCommunication
                 string antwoord0 = serialPortArduino.ReadLine().TrimEnd().Substring(4);
                 int adc0 = Int32.Parse(antwoord0);
 
-                double gewensteTemp = 0.039101 * adc0 + 5;   // lineaire herschaling 0..1023 → 5..45°C
+                double gewensteTemp = 0.039101 * adc0 + 5;
                 labelGewensteTemp.Text = $"{gewensteTemp:F1} °C";
 
                 // Huidige temperatuur (LM35 op A1)
@@ -340,26 +346,26 @@ namespace SerialCommunication
                 string antwoord1 = serialPortArduino.ReadLine().TrimEnd().Substring(4);
                 int adc1 = Int32.Parse(antwoord1);
 
-                double huidigeTemp = (adc1 / 1023.0) * 500.0;   // LM35: 0..1023 → 0..500°C
+                double huidigeTemp = (adc1 / 1023.0) * 500.0;
                 labelHuidigeTemp.Text = $"{huidigeTemp:F1} °C";
 
-                // LED aansturen (digitale pin 2)
+                // LED aansturen
                 if (huidigeTemp < gewensteTemp)
                     serialPortArduino.WriteLine("set d2 high");
                 else
                     serialPortArduino.WriteLine("set d2 low");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                labelStatus.Text = "Error: " + ex.Message;
-                serialPortArduino.Close();
+                // USB-kabel eruit → foutmelding
+                labelStatus.Text = "verbinding verbroken";
                 radioButtonVerbonden.Checked = false;
-                buttonConnect.Text = "Connect";
-              }
+                buttonConnect.Text = "connect";
 
-         }
+                try { serialPortArduino.Close(); } catch { }
+            }
+        }
     }
 }
-  
 
 

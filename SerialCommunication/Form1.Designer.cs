@@ -860,10 +860,10 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 739);
+            this.statusStrip.Location = new System.Drawing.Point(0, 733);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 21, 0);
-            this.statusStrip.Size = new System.Drawing.Size(1212, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1212, 28);
             this.statusStrip.TabIndex = 10;
             this.statusStrip.Text = "statusStrip1";
             // 
